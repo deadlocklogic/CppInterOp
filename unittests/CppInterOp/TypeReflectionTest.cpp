@@ -559,3 +559,23 @@ TEST(TypeReflectionTest, IsSmartPtrType) {
   EXPECT_FALSE(Cpp::IsSmartPtrType(get_type_from_varname("raw_ptr")));
   EXPECT_FALSE(Cpp::IsSmartPtrType(get_type_from_varname("object")));
 }
+
+TEST(TypeReflectionTest, VariadicTemplate) {
+  Cpp::CreateInterpreter();
+
+  Interp->declare(R"(
+    #include <memory>
+
+    template <typename... Ts>
+    struct Test1
+    {};
+
+    class Test2
+    {
+    public:
+      static void test(Test1<>);
+    };
+  )");
+
+  GetAllTopLevelDecls(code, Decls);
+}
